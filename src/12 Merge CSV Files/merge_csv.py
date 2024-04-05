@@ -1,24 +1,14 @@
-import csv
+import pandas as pd
 
-def merge_csv(csv_list, output_path):
-    # build list with all fieldnames
-    fieldnames = []
-    for file in csv_list:
-        with open(file, 'r', encoding='utf-8') as input_csv:
-            field = csv.DictReader(input_csv).fieldnames
-            fieldnames.extend(f for f in field if f not in fieldnames)
+def merge_csv_files(input_files, output_file):
+    # Read each CSV file into a DataFrame
+    dfs = [pd.read_csv(file) for file in input_files]
+    # Concatenate the DataFrames, ignoring indexes
+    merged_df = pd.concat(dfs, ignore_index=True)
+    # Write the merged DataFrame to a new CSV file
+    merged_df.to_csv(output_file, index=False)
 
-    # write data to output file based on field names
-    with open(output_path, 'w', encoding='utf-8', newline='') as output_csv:
-        writer = csv.DictWriter(output_csv, fieldnames=fieldnames)
-        writer.writeheader()
-        for file in csv_list:
-            with open(file, 'r', encoding='utf-8') as input_csv:
-                reader = csv.DictReader(input_csv)
-                for row in reader:
-                    writer.writerow(row)
-
-
-# commands used in solution video for reference
-if __name__ == '__main__':
-    merge_csv(['class1.csv', 'class2.csv'], 'all_students.csv')
+# Example usage
+input_files = ["class1.csv", "class2.csv"]
+output_file = "all_students.csv"
+merge_csv_files(input_files, output_file)
