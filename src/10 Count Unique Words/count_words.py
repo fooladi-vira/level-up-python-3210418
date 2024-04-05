@@ -1,20 +1,25 @@
 import re
-import collections
+from collections import Counter
 
+def count_words(filename):
+    # Read the file and convert all text to lowercase
+    with open(filename, 'r', encoding='utf-8') as file:
+        text = file.read().lower()
 
-def count_words(path):
-    with open(path, 'r', encoding='utf-8') as file:
-        all_words = re.findall(r"[0-9a-zA-Z-']+", file.read())
-        all_words = [word.upper() for word in all_words]
-        print(f'\nTotal Words: {len(all_words)}')
+    # Use regex to find all words (including numbers, apostrophes, and hyphens)
+    words = re.findall(r"\b[a-zA-Z0-9'-]+\b", text)
 
-        word_counts = collections.Counter(all_words)
+    # Count the frequency of each word
+    word_counts = Counter(words)
 
-        print('\nTop 20 Words:')
-        for word in word_counts.most_common(20):
-            print(f'{word[0]}\t{word[1]}')
+    # Print total word count
+    total_words = len(words)
+    print(f"Total words: {total_words}\n")
 
+    # Print the top 20 most frequent words and their counts
+    print("Top 20 most frequent words:")
+    for word, count in word_counts.most_common(20):
+        print(f"{word}: {count}")
 
-# commands used in solution video for reference
-if __name__ == '__main__':
-    count_words('shakespeare.txt')
+# Example usage
+count_words('shakespeare.txt')
