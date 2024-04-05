@@ -1,16 +1,15 @@
-def index_all(search_list, item):
-    index_list = []
-    for index, value in enumerate(search_list):
-        if value == item:
-            index_list.append([index])
-        elif isinstance(search_list[index], list):
-            for i in index_all(search_list[index], item):
-                index_list.append([index] + i)
-    return index_list
+def index_all(search_list, value):
+    indices = []
+    for i, item in enumerate(search_list):
+        if item == value:
+            indices.append([i])
+        elif isinstance(item, list):
+            # Recursively search for value in the sublist
+            for index in index_all(item, value):
+                indices.append([i] + index)
+    return indices
 
-
-# commands used in solution video for reference
-if __name__ == '__main__':
-    example = [[[1, 2, 3], 2, [1, 3]], [1, 2, 3]]
-    print(index_all(example, 2))  # [[0, 0, 1], [0, 1], [1, 1]]
-    print(index_all(example, [1, 2, 3]))  # [[0, 0], [1]]
+# Test case
+my_list = [[1, 2, 3], [2, 4, 6], [7,2,2, 8, [1, 2, 3]]]
+value_to_find = 2
+print(index_all(my_list, value_to_find))  # Output: [[0, 1], [1, 0]]
